@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth', 'checkRole:administrator','revalidate']],
      Route::POST('updatesekolah/{data}', [DataSekolahController::class,'updatedata']);
      Route::resource('verifikasi',VerifikasiController::class);
      Route::get('dataverifikasi',[VerifikasiController::class,'index']);
+     Route::resource('catatan',Catatan::class);
+
 
 
 });

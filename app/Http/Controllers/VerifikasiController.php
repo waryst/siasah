@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\DataSekolah;
 use App\Models\Laporan;
+use App\Models\NoSurat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -32,6 +34,15 @@ class VerifikasiController extends Controller
     }
     public function show(Laporan $verifikasi)
     {
+        $kirim['pencarian_data']=$verifikasi;
+        $kirim['pencarian_kepsek']=$verifikasi->datasekolah->profilsekolah;
+        $kirim['tgl_lhr']= Carbon::parse($verifikasi->tgl_lhr)->isoFormat('D MMMM Y');
+        $carinosurat = NoSurat::where('laporan_id',$verifikasi->id)->first();
+
+        $kirim['nomer_surat'] = $carinosurat->nomer_surat ?? "";
+        $kirim['tgl_surat'] = date('d-m-Y', strtotime($carinosurat->tanggal_surat ?? "now")) ?? " ";
+
+        return response()->json($kirim);
         return response()->json(['pencarian_data' => $verifikasi]);
     }
     public function update(Request $request, Laporan $verifikasi)
